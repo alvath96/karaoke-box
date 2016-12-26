@@ -31,7 +31,7 @@ $(document).ready(function() {
     return s.replace(/^\s+|\s+$/g,"");
   }
   function playSubtitles(subtitleElement) {
-    var videoId = subtitleElement.attr('data-video');
+    // var videoId = subtitleElement.attr('data-video');
     var srt = subtitleElement.text();
     subtitleElement.text('');
     srt = srt.replace(/\r\n|\r|\n/g, '\n')
@@ -52,18 +52,26 @@ $(document).ready(function() {
           }
           is = toSeconds(i);
           os = toSeconds(o);
+
+          console.log(Math.parseInt(is), is);
+          if (i.split(',')[1] == '000') {
+            console.log(is + '.000');
+            is = is + '.000';
+          }
+
           subtitles[is] = {i:i, o: o, t: t};
         }
     }
     var currentSubtitle = -1;
+    currentTime = 0;
     var ival = setInterval(function() {
-      var currentTime = document.getElementById(videoId).currentTime;
       var subtitle = -1;
       for(s in subtitles) {
         if(s > currentTime)
           break
         subtitle = s;
       }
+
       if(subtitle > 0) {
         if(subtitle != currentSubtitle) {
           subtitleElement.html(subtitles[subtitle].t);
@@ -72,16 +80,19 @@ $(document).ready(function() {
           subtitleElement.html('');
         }
       }
+
+      currentTime += 0.1;
     }, 100);
   }
-  $('.srt').each(function() {
+ 
+  $('#lyrics').each(function() {
     var subtitleElement = $(this);
-    var videoId = subtitleElement.attr('data-video');
-    if(!videoId) return;
     var srtUrl = subtitleElement.attr('data-srt');
+    console.log(srtUrl);
     if(srtUrl) {
       $(this).load(srtUrl, function (responseText, textStatus, req) { playSubtitles(subtitleElement)})
     } else {
+      console.log('test');
       playSubtitles(subtitleElement);
     }
   });
