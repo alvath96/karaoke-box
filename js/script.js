@@ -78,65 +78,66 @@ $(document).ready(function() {
   }
 
   function playMusic(song) {
+
+    $('#song').children('.container').remove();
+    $('#song').append('<div class="container"><div class ="row"><div class="col-xs-8 col-sm-8"><h4>'+ song.title +' - ' + song.singer + '</h4><br><h3 id="lyrics"></h3></div><div class="col-xs-4 col-sm-4"><a class="music-stop" href="#" song_id="' + song.song_id + '"><i class="glyphicon glyphicon-stop" style="font-size:200%; color: #c0392b;"></i></a></div></div></div>')
+    
+    $('.music-stop').click(function (e) {
+      console.log('blabla');
+      song_id = $(this).attr('song_id');
+      
+      $.ajax({
+        url: karaokeUrl + 'stop',
+        method: 'POST',
+        data: {song_id},
+        success: function (data) {
+          stopMusic();
+        }
+      })
+    });
+
     var lyricsElement = $('#lyrics');
     var srtUrl = karaokeUrl + 'lyrics/' + song.song_id + '.srt';
 
     if(srtUrl) {
-      $(this).load(srtUrl, function (responseText, textStatus, req) { playSubtitles(lyricsElement, responseText, 0)})
+      $(this).load(srtUrl, function (responseText, textStatus, req) { playSubtitles(lyricsElement, responseText, song.current_time)})
     } else {
       console.log('no lyrics');
     }
   }
 
   function stopMusic() {
-    // stop music?
+    $('#song').children('.container').remove();
+    $('#song').append('<div class="container"><h3>No song is playing...</h3></div>');
   }
 
   $.ajax({
     url: karaokeUrl + 'list',
     dataType: 'json',
     success: function (data) {   
-      // currSong = data.currSong;
-      // if (currSong != null) {
-      //   playMusic(currSong);
-      // }
+      curr_song = data.curr_song;
+      if (curr_song != null) {
+        playMusic(curr_song);
+      }
 
-      songs = data;
+      songs = data.songs;
+      $('#song').append('<div class="container"><h3>No song is playing...</h3></div>');
       $.each(songs, function (key, song) {
         $('#songs').append('<div class="well"><div class="container-fluid"><div class="row"><div class="col-xs-4 col-sm-2"><a href="#" class="thumbnail"><img src="' + karaokeUrl + 'albums/' + song.song_id + '.png" alt="..."></a></div><div class="col-xs-4 col-sm-5"><h2>' + song.title + '</h2><p>' + song.singer + '</p></div><div class="col-xs-4 col-sm-4"><a class="music-play" href="#" style="text-align:center;" song_id="' + song.song_id + '"><i class="glyphicon glyphicon-play" style="font-size:200%; color: #2ecc71;"></i></a></div></div></div>');
       });
 
       $('.music-play').click(function (e) {
         song_id = $(this).attr('song_id');
-        console.log(song_id);
-
         $.ajax({
           url: karaokeUrl + 'play',
           method: 'POST',
           dataType: 'json',
           data: {song_id},
           success: function (data) {
-            console.log('haha');
             playMusic(data);
           }
         })
       });
-      // $('.music-stop').click(function (e) {
-      //   song_id = currSong.song_id;
-
-      //   $.ajax({
-      //     url: baseUrl + 'stop',
-      //     method: 'POST',
-      //     data: song_id,
-      //     success: function (data) {
-      //       console.log('haha');
-      //       if (data.status == 'success') {
-      //         stopMusic();
-      //         $('#current').hide();
-      //       }
-      //     }
-      //   })
-      // });
     }
   });
 });
