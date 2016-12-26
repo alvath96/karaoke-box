@@ -1,0 +1,19 @@
+{
+  "currSong": null,
+  "songs": [
+    {
+      "album": null,
+      "singer": "Chainsmoker",
+      "song_id": "closer",
+      "file": "/home/pi/songs/Closer.mp3",
+      "title": "Closer"
+    },
+    {
+      "album": null,
+      "singer": "DNCE",
+      "song_id": "cake_ocean",
+      "file": "/home/pi/songs/Cake_By_The_Ocean.mp3",
+      "title": "Cake by the Ocean"
+    }
+  ]
+}
