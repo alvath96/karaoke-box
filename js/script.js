@@ -21,7 +21,7 @@ $(document).ready(function() {
 
       songs = data.songs;
       $.each(songs, function (key, song) {
-        $('#songs').append('<div class="well"><div class="container"><div class="row"><div class="col-md-8"><h1>' + song.title + '</h1><p>' + song.singer + '</p></div><div class="col-md-2"><a class="music-play" href="#" song_id="' + song.song_id + '"><i class="glyphicon glyphicon-play"></i>play</a></div></div></div>');
+        $('#songs').append('<div class="well"><div class="container-fluid"><div class="row"><div class="col-xs-4 col-sm-2"><a href="#" class="thumbnail"><img src="..." alt="..."></a></div><div class="col-xs-4 col-sm-5"><h2>' + song.title + '</h2><p>' + song.singer + '</p></div><div class="col-xs-4 col-sm-4"><a class="music-play" href="#" song_id=" style="text-align:center;"' + song.song_id + '"><i class="glyphicon glyphicon-play" style="font-size:200%; color: #2ecc71;"></i></a></div></div></div>');
       });
 
       $('.music-play').click(function (e) {
@@ -36,6 +36,7 @@ $(document).ready(function() {
             console.log('haha');
             if (data.status == 'success') {
               playMusic(data.currSong);
+              $('#current').show();
             }
           },
           error: function (status, err) {
@@ -45,7 +46,7 @@ $(document).ready(function() {
       });
 
       $('.music-stop').click(function (e) {
-        song_id = currSong.song_id
+        song_id = currSong.song_id;
 
         $.ajax({
           url: baseUrl + 'stop',
@@ -55,6 +56,7 @@ $(document).ready(function() {
             console.log('haha');
             if (data.status == 'success') {
               stopMusic();
+              $('#current').hide();
             }
           },
           error: function (status, err) {
